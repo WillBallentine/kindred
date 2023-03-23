@@ -58,7 +58,7 @@ class Particle(Generic):
             self.kill()
 
 class Tree(Generic):
-    def __init__(self, pos, surf, groups, name):
+    def __init__(self, pos, surf, groups, name, player_add):
         super().__init__(pos, surf, groups)
 
         #tree attributes
@@ -66,6 +66,7 @@ class Tree(Generic):
         self.alive = True
         self.stump_surf = pygame.image.load(f'kindred/graphics/stumps/{"small" if name == "Small" else "large"}.png').convert_alpha()
         self.invul_timer = Timer(200)
+        self.name = name
 
         #apples
 
@@ -73,6 +74,8 @@ class Tree(Generic):
         self.apple_pos = apple_pos[name]
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
+
+        self.player_add = player_add
 
     def damage(self):
 
@@ -83,6 +86,7 @@ class Tree(Generic):
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
             Particle(random_apple.rect.topleft, random_apple.image, self.groups()[0], z = layers['fruit'], duration = 200)
+            self.player_add('apple')
             random_apple.kill()
             
     def check_death(self):
@@ -92,6 +96,10 @@ class Tree(Generic):
             self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
             self.hitbox = self.rect.copy().inflate((-10, -self.rect.height * 0.6))
             self.alive = False
+            if self.name == 'Small':
+                self.player_add('wood')
+            else:
+                self.player_add('large wood')
 
     def update(self, dt):
         if self.alive:
