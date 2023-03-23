@@ -60,13 +60,13 @@ class Player(pygame.sprite.Sprite):
                     tree.damage()
 
         if self.selected_tool == 'water':
-            pass
+            self.soil_layer.water(self.target_pos)
     
     def get_tartget_pos(self):
         self.target_pos = self.rect.center + player_tool_offset[self.status.split('_')[0]]
 
     def use_seed(self):
-        pass
+        self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
 
     def import_assets(self):
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [], 'right_idle': [], 'left_idle': [], 'up_idle': [], 'down_idle': [], 'right_hoe': [], 'left_hoe': [], 'up_hoe': [], 'down_hoe': [], 'right_water': [], 'left_water': [], 'up_water': [], 'down_water': [], 'right_axe': [], 'left_axe': [], 'up_axe': [], 'down_axe': [], 'right_pickaxe': [], 'left_pickaxe': [], 'up_pickaxe': [], 'down_pickaxe': []}
