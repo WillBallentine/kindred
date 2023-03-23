@@ -9,6 +9,7 @@ from transition import Transition
 from soil import SoilLayer
 from sky import Rain, Sky
 from random import randint
+from menu import Menu
 
 class Level:
     def __init__(self):
@@ -32,6 +33,10 @@ class Level:
         self.raining = randint(0,10) > 7
         self.soil_layer.raining = self.raining
         self.sky = Sky()
+
+        #shop
+        self.menu = Menu(self.player, self.toggle_shop)
+        self.shop_active = False
 
     def setup(self):
         tmx_data = load_pygame('kindred/data/map.tmx')
@@ -72,9 +77,12 @@ class Level:
         # player
         for obj in tmx_data.get_layer_by_name('Player'):
             if obj.name == 'Start':
-                self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites, self.tree_sprites, self.interaction_sprites, self.soil_layer)
+                self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites, self.tree_sprites, self.interaction_sprites, self.soil_layer, self.toggle_shop)
 
-            if obj.name == "Bed":
+            if obj.name == 'Bed':
+                Interaction((obj.x, obj.y), (obj.width, obj.height), self.interaction_sprites, obj.name)
+            
+            if obj.name == 'Trader':
                 Interaction((obj.x, obj.y), (obj.width, obj.height), self.interaction_sprites, obj.name)
 
 
@@ -91,6 +99,9 @@ class Level:
             self.player.item_inventory[item] +=1
         if item == 'tomato':
             self.player.item_inventory[item] +=1
+
+    def toggle_shop(self):
+        self.shop_active = not self.shop_active
 
     def reset(self):
         
@@ -127,16 +138,20 @@ class Level:
     def run(self, dt):
         self.display_surface.fill(('black'))
         self.all_sprites.custom_draw(self.player)
-        self.all_sprites.update(dt)
-        self.plant_collision()
 
-        if self.raining:
+        if self.shop_active:
+            self.menu.update()
+        else:
+            self.all_sprites.update(dt)
+            self.plant_collision()
+
+        self.overlay.display()
+
+        if self.raining and not self.shop_active:
             self.rain.update()
 
         #daytime
-        self.sky.diaply(dt)
-
-        self.overlay.display()
+        self.sky.display(dt)
 
         if self.player.sleep:
             self.transition.play()
