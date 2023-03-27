@@ -81,7 +81,7 @@ class SoilLayer:
         self.hoe_sound = pygame.mixer.Sound('kindred/audio/hoe.wav')
         self.plant_sound = pygame.mixer.Sound('kindred/audio/plant.wav')
         self.hoe_sound.set_volume(0.1)
-        self.plant_sound.set_volume(0.2)
+        self.plant_sound.set_volume(0.1)
 
     def create_soil_grid(self):
         ground = pygame.image.load('kindred/graphics/world/ground.png')
