@@ -1,6 +1,7 @@
-import pygame, sys
+import pygame, sys, os
 from settings import *
 from level import Level
+
 
 
 class Game:
@@ -22,6 +23,7 @@ class Game:
             dt = self.clock.tick() / 1000
             self.level.run(dt)
             pygame.display.update()
+
 
 
 if __name__ == '__main__':
