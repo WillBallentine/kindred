@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         #movement attributes
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 200
+        self.speed = 250
 
         #collision
         self.hitbox = self.rect.copy().inflate((-126,-70))
@@ -54,6 +54,10 @@ class Player(pygame.sprite.Sprite):
         self.soil_layer = soil_layer
         self.toggle_shop = toggle_shop
 
+        # sound
+        self.watering = pygame.mixer.Sound('kindred/audio/water.mp3')
+        self.watering.set_volume(0.2)
+
 
     def use_tool(self):
         if self.selected_tool == 'hoe':
@@ -66,6 +70,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.selected_tool == 'water':
             self.soil_layer.water(self.target_pos)
+            self.watering.play()
     
     def get_tartget_pos(self):
         self.target_pos = self.rect.center + player_tool_offset[self.status.split('_')[0]]

@@ -38,6 +38,13 @@ class Level:
         self.menu = Menu(self.player, self.toggle_shop)
         self.shop_active = False
 
+        #music
+        self.success = pygame.mixer.Sound('kindred/audio/success.wav')
+        self.music = pygame.mixer.Sound('kindred/audio/music.mp3')
+        self.success.set_volume(0.3)
+        self.music.play(loops=-1)
+        self.music.set_volume(0.1)
+
     def setup(self):
         tmx_data = load_pygame('kindred/data/map.tmx')
 
@@ -99,6 +106,8 @@ class Level:
             self.player.item_inventory[item] +=1
         if item == 'tomato':
             self.player.item_inventory[item] +=1
+
+        self.success.play()
 
     def toggle_shop(self):
         self.shop_active = not self.shop_active
